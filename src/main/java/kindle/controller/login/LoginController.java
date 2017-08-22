@@ -1,19 +1,17 @@
 package kindle.controller.login;
 
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @RequestMapping("login")
-@Component
+@Controller
 public class LoginController {
 
 
-    @RequestMapping("/mian")
+    @RequestMapping("/main")
     public String login(){
 
-        return "login_soft.html";
+        return "forward:/templates/admin3/login_soft.html";
     }
 }

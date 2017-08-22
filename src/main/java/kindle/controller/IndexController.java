@@ -8,6 +8,6 @@ public class IndexController {
 
     @RequestMapping("/")
     public String index() {
-        return "forward:login_soft.html";
+        return "redirect:/templates/admin3/login_soft.html";
     }
 }
