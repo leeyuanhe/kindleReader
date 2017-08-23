@@ -19,10 +19,10 @@ var Login = function () {
 
 	            messages: {
 	                username: {
-	                    required: "Username is required."
+	                    required: "用户名为必输项"
 	                },
 	                password: {
-	                    required: "Password is required."
+	                    required: "密码为必输项"
 	                }
 	            },
 
