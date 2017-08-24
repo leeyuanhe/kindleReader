@@ -35,4 +35,5 @@ dependencies {
     compile ("org.springframework.boot:spring-boot-starter-tomcat:1.5.4.RELEASE")
     compile ("org.springframework.boot:spring-boot-starter-data-mongodb:1.5.6.RELEASE")
     compile ("org.apache.shiro:shiro-spring:1.4.0")
+    compile ("com.google.guava:guava:19.0")
 }
