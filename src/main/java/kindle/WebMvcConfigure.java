@@ -1,8 +1,10 @@
-package kindle.controller;
+package kindle;
 
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -12,10 +14,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Configuration
+@EnableWebMvc
 public class WebMvcConfigure extends WebMvcConfigurerAdapter {
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**")
+                .addResourceLocations("/");
+    }
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("forward:/templates/admin3/login_soft.html");
+        registry.addViewController("/").setViewName("login_soft");
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
         super.addViewControllers(registry);
         String os = System.getProperty("os.name");

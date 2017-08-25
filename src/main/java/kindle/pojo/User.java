@@ -9,6 +9,7 @@ public class User {
     private String password;
     private String ipAddress;
     private Date cdate;
+    private String salt;
 
 
     public String getUsername() {
@@ -49,5 +50,13 @@ public class User {
 
     public void setCdate(Date cdate) {
         this.cdate = cdate;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 }

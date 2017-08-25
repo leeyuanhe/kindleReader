@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
  * @description 启动类
@@ -11,6 +12,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  * @date 2017-08-22
  * @param
  */
+
 @SpringBootApplication
 public class KindleApplication extends SpringBootServletInitializer {
     @Override

@@ -8,6 +8,7 @@ public enum ExceptionMsg {
     LoginNameOrPassWordError("003", "用户名或者密码错误！"),
     EmailUsed("001","该邮箱已被注册"),
     UserNameUsed("002","该登录名称已存在"),
+    LoginNameNotExist("006","该用户名不存在")
 
     ;
    private ExceptionMsg(String code, String msg) {
