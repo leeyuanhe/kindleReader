@@ -1,12 +1,13 @@
 package kindle;
 
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 import java.awt.*;
 import java.io.IOException;
@@ -14,18 +15,37 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Configuration
-@EnableWebMvc
+//@EnableWebMvc
 public class WebMvcConfigure extends WebMvcConfigurerAdapter {
 
-    @Override
+    /*@Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**")
-                .addResourceLocations("/");
+        registry.addResourceHandler("/templates/**")
+                .addResourceLocations("classpath:/templates/pages/admin");
+        super.addResourceHandlers(registry);
+    }*/
+
+   /* @Bean
+    public ViewResolver getViewResolver() {
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+        resolver.setPrefix("/templates/pages/admin3/");
+        resolver.setSuffix(".html");
+        return resolver;
     }
 
     @Override
+    public void configureDefaultServletHandling(
+            DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
+*/
+
+
+    @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("login_soft");
+//        registry.addViewController("/").setViewName("forward:templates/admin3/login_soft.html");
+//        registry.addViewController("/").setViewName("pages/admin3/login_soft");
+        registry.addViewController("/").setViewName("index");
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
         super.addViewControllers(registry);
         String os = System.getProperty("os.name");

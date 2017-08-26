@@ -32,15 +32,15 @@ public class UserController extends BaseController{
 
         if (CommonUtils.isEmpty(byUsernameOrEmail)){
             mv.addObject("error", ExceptionMsg.LoginNameNotExist);
-            mv.setViewName("login_soft");
+            mv.setViewName("pages/admin3/login_soft");
             return mv;
         }else if (!PasswordUtils.getMD5(user.getPassword()+byUsernameOrEmail.getSalt())
                 .equals(byUsernameOrEmail.getPassword())){
             mv.addObject("error", ExceptionMsg.LoginNameOrPassWordError);
-            mv.setViewName("/login_soft");
+            mv.setViewName("pages/admin3/login_soft");
             return mv;
         }
-        mv.setViewName("index");
+        mv.setViewName("pages/admin3/login_soft");
         return mv;
     }
 
