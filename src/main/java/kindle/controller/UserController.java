@@ -7,7 +7,6 @@ import kindle.repository.UserRepository;
 import kindle.utils.CommonUtils;
 import kindle.utils.PasswordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,54 +18,52 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("user")
-public class UserController extends BaseController{
+public class UserController extends BaseController {
 
     @Autowired
     UserRepository userRepository;
 
-    @RequestMapping(value ="/login",method= RequestMethod.POST)
-    public ModelAndView login(@ModelAttribute User user){
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ModelAndView login(@ModelAttribute User user) {
         User byUsernameOrEmail = userRepository.findUserByUsernameOrEmail(user.getUsername(), user.getUsername());
 
         ModelAndView mv = new ModelAndView();
 
-        if (CommonUtils.isEmpty(byUsernameOrEmail)){
-            mv.addObject("error", ExceptionMsg.LoginNameNotExist);
-            mv.setViewName("pages/admin3/login_soft");
-            return mv;
-        }else if (!PasswordUtils.getMD5(user.getPassword()+byUsernameOrEmail.getSalt())
-                .equals(byUsernameOrEmail.getPassword())){
-            mv.addObject("error", ExceptionMsg.LoginNameOrPassWordError);
-            mv.setViewName("pages/admin3/login_soft");
-            return mv;
+        if (CommonUtils.isEmpty(byUsernameOrEmail)) {
+            return new ModelAndView("redirect:/", "message", ExceptionMsg.LoginNameNotExist.getMsg());
+        } else if (!PasswordUtils.getMD5(user.getPassword() + byUsernameOrEmail.getSalt())
+                .equals(byUsernameOrEmail.getPassword())) {
+            return new ModelAndView("redirect:/", "message", ExceptionMsg.LoginNameOrPassWordError.getMsg());
         }
         mv.setViewName("pages/admin3/login_soft");
         return mv;
     }
 
-    @RequestMapping(value = "/register",method= RequestMethod.POST)
-    public ModelAndView  registerUser(@ModelAttribute User user,HttpServletResponse response){
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ModelAndView registerUser(@ModelAttribute User user, HttpServletResponse response) {
 
         User byUserName = userRepository.findByUsername(user.getUsername());
         ModelAndView mv = new ModelAndView();
-       if (!CommonUtils.isEmpty(byUserName)){
-           mv.addObject("error", ExceptionMsg.UserNameUsed);
-           mv.setViewName("login_soft");
-           return mv;
-       }
+        if (!CommonUtils.isEmpty(byUserName)) {
+            mv.addObject("error", ExceptionMsg.UserNameUsed);
+            mv.setViewName("login_soft");
+            return mv;
+        }
 
         User byEmail = userRepository.findByEmail(user.getEmail());
 
-       if (!CommonUtils.isEmpty(byEmail)){
-           mv.addObject("error", ExceptionMsg.EmailUsed);
-           mv.setViewName("login_soft");
-           return mv;
-       }
+        if (!CommonUtils.isEmpty(byEmail)) {
+            mv.addObject("error", ExceptionMsg.EmailUsed);
+            mv.setViewName("login_soft");
+            return mv;
+        }
         String salt = PasswordUtils.generateRandomSalt();
-        user.setPassword(PasswordUtils.getMD5(user.getPassword()+salt));
+        user.setPassword(PasswordUtils.getMD5(user.getPassword() + salt));
         user.setSalt(salt);
-       user.setCdate(new Date());
-       userRepository.save(user);
+        user.setCdate(new Date());
+        userRepository.save(user);
         mv.setViewName("index");
         return mv;
     }
