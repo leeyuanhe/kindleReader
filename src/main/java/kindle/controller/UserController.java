@@ -5,6 +5,7 @@ import kindle.pojo.User;
 import kindle.pojo.result.ExceptionMsg;
 import kindle.repository.UserRepository;
 import kindle.utils.CommonUtils;
+import kindle.utils.Constants;
 import kindle.utils.PasswordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
@@ -23,20 +25,25 @@ public class UserController extends BaseController {
     @Autowired
     UserRepository userRepository;
 
-
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ModelAndView login(@ModelAttribute User user) {
+    public ModelAndView login(@ModelAttribute User user,HttpServletResponse response) {
         User byUsernameOrEmail = userRepository.findUserByUsernameOrEmail(user.getUsername(), user.getUsername());
-
+        Cookie cookie = new Cookie("username",user.getUsername());
         ModelAndView mv = new ModelAndView();
-
         if (CommonUtils.isEmpty(byUsernameOrEmail)) {
-            return new ModelAndView("redirect:/", "message", ExceptionMsg.LoginNameNotExist.getMsg());
+            mv.addObject("message", ExceptionMsg.LoginNameNotExist.getMsg());
+            mv.setViewName("redirect:/");
+            return mv;
         } else if (!PasswordUtils.getMD5(user.getPassword() + byUsernameOrEmail.getSalt())
                 .equals(byUsernameOrEmail.getPassword())) {
-            return new ModelAndView("redirect:/", "message", ExceptionMsg.LoginNameOrPassWordError.getMsg());
+            mv.addObject("message", ExceptionMsg.LoginNameOrPassWordError.getMsg());
+            mv.setViewName("redirect:/");
+            cookie.setMaxAge(Constants.COOKIE_USERNAME_TIMEOUT);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+            return mv;
         }
-        mv.setViewName("pages/admin3/login_soft");
+        mv.setViewName("pages/admin3/index");
         return mv;
     }
 

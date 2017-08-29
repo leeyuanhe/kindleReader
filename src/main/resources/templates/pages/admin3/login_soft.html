@@ -62,25 +62,28 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- BEGIN LOGIN -->
 <div class="content">
 	<!-- BEGIN LOGIN FORM -->
-	<form class="login-form" action="user/login" method="post">
+	<form class="login-form"  th:action="@{/user/login}"
+		  method="post" >
 		<h3 class="form-title">登录</h3>
 		<div class="alert alert-danger"  th:if="${#httpServletRequest.getParameter('message')}">
 			<button class="close" data-close="alert"></button>
-			<span th:text="${#httpServletRequest.getParameter('message')}">测试</span>
+			<span th:text="${#httpServletRequest.getParameter('message')}"></span>
 		</div>
 		<div class="form-group">
-			<!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+			<!--ie8, ie9 does not support html5 placeholder, so we just show field title for that request.getCookies()-->
 			<label class="control-label visible-ie8 visible-ie9">Username</label>
 			<div class="input-icon">
 				<i class="fa fa-user"></i>
-				<input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="用户名|邮箱" name="username"/>
+				<input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="用户名|邮箱"
+					   name="username" id="loginname"/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label visible-ie8 visible-ie9">Password</label>
 			<div class="input-icon">
 				<i class="fa fa-lock"></i>
-				<input class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="密码" name="password"/>
+				<input class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="密码"
+					   name="password"  />
 			</div>
 		</div>
 		<div class="form-actions">
@@ -217,7 +220,46 @@ jQuery(document).ready(function() {
           duration: 8000
     }
     );
+
+
+    //记住密码功能
+    var str = getCookie("username");
+    if (str.length > 0){
+        $("#loginname").val(str);
+        return;
+	}
+
+    str = str.substring(1,str.length-1);
+    var username = str.split(",")[0];
+    var password = str.split(",")[1];
+    var flag = str.split(",")[2];
+    //自动填充用户名和密码
+    $("input[name='username']").val(username);
+    $("input[name='password']").val(password);
+
+
+
 });
+
+//获取cookie
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+
+    for (var index in ca) {
+        var c = ca[index];
+        while (c.charAt(0)==' '){
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) != -1){
+            var str = c.substring(name.length, c.length);
+            return str;
+        }
+    }
+    return "";
+}
+
+
 </script>
 <!-- END JAVASCRIPTS -->
 </body>

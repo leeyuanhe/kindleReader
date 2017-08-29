@@ -14,12 +14,8 @@ import java.net.URISyntaxException;
 @Configuration
 public class WebMvcConfigure extends WebMvcConfigurerAdapter {
 
-
-
-
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-
         registry.addViewController("/").setViewName("pages/admin3/login_soft");
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
         super.addViewControllers(registry);
