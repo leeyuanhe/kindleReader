@@ -1,8 +1,11 @@
 package kindle.controller;
 
 
+import com.sun.deploy.net.URLEncoder;
 import kindle.pojo.User;
 import kindle.pojo.result.ExceptionMsg;
+import kindle.pojo.result.Response;
+import kindle.pojo.result.ResponseData;
 import kindle.repository.UserRepository;
 import kindle.utils.CommonUtils;
 import kindle.utils.Constants;
@@ -27,51 +30,53 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ModelAndView login(@ModelAttribute User user,HttpServletResponse response) {
-        User byUsernameOrEmail = userRepository.findUserByUsernameOrEmail(user.getUsername(), user.getUsername());
-        Cookie cookie = new Cookie("username",user.getUsername());
         ModelAndView mv = new ModelAndView();
-        if (CommonUtils.isEmpty(byUsernameOrEmail)) {
-            mv.addObject("message", ExceptionMsg.LoginNameNotExist.getMsg());
-            mv.setViewName("redirect:/");
-            return mv;
-        } else if (!PasswordUtils.getMD5(user.getPassword() + byUsernameOrEmail.getSalt())
-                .equals(byUsernameOrEmail.getPassword())) {
-            mv.addObject("message", ExceptionMsg.LoginNameOrPassWordError.getMsg());
-            mv.setViewName("redirect:/");
-            cookie.setMaxAge(Constants.COOKIE_USERNAME_TIMEOUT);
-            cookie.setPath("/");
-            response.addCookie(cookie);
-            return mv;
+        try {
+            User byUsernameOrEmail = userRepository.findUserByUsernameOrEmail(user.getUsername(), user.getUsername());
+            Cookie cookie = new Cookie("username", URLEncoder.encode(user.getUsername(), "UTF-8"));
+
+            if (CommonUtils.isEmpty(byUsernameOrEmail)) {
+                mv.addObject("message", ExceptionMsg.LoginNameNotExist.getMsg());
+                mv.setViewName("redirect:/");
+                return mv;
+            } else if (!PasswordUtils.getMD5(user.getPassword() + byUsernameOrEmail.getSalt())
+                    .equals(byUsernameOrEmail.getPassword())) {
+                mv.addObject("message", ExceptionMsg.LoginNameOrPassWordError.getMsg());
+                mv.setViewName("redirect:/");
+                cookie.setMaxAge(Constants.COOKIE_USERNAME_TIMEOUT);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+                return mv;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         mv.setViewName("pages/admin3/index");
         return mv;
+
     }
 
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView registerUser(@ModelAttribute User user, HttpServletResponse response) {
+    public Response registerUser(@ModelAttribute User user, HttpServletResponse response) {
 
         User byUserName = userRepository.findByUsername(user.getUsername());
-        ModelAndView mv = new ModelAndView();
         if (!CommonUtils.isEmpty(byUserName)) {
-            mv.addObject("error", ExceptionMsg.UserNameUsed);
-            mv.setViewName("login_soft");
-            return mv;
+            return result(ExceptionMsg.UserNameUsed);
+
         }
 
         User byEmail = userRepository.findByEmail(user.getEmail());
 
         if (!CommonUtils.isEmpty(byEmail)) {
-            mv.addObject("error", ExceptionMsg.EmailUsed);
-            mv.setViewName("login_soft");
-            return mv;
+            return result(ExceptionMsg.EmailUsed);
+
         }
         String salt = PasswordUtils.generateRandomSalt();
         user.setPassword(PasswordUtils.getMD5(user.getPassword() + salt));
         user.setSalt(salt);
         user.setCdate(new Date());
         userRepository.save(user);
-        mv.setViewName("index");
-        return mv;
+        return result();
     }
 }
