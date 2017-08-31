@@ -154,23 +154,11 @@ var Login = function () {
 	            ignore: "",
 	            rules: {
 	                
-	                fullname: {
-	                    required: true
-	                },
+
 	                email: {
 	                    required: true,
 	                    email: true
 	                },
-	                address: {
-	                    required: true
-	                },
-	                city: {
-	                    required: true
-	                },
-	                country: {
-	                    required: true
-	                },
-
 	                username: {
 	                    required: true
 	                },
@@ -179,17 +167,21 @@ var Login = function () {
 	                },
 	                rpassword: {
 	                    equalTo: "#register_password"
-	                },
-
-	                tnc: {
-	                    required: true
 	                }
 	            },
 
 	            messages: { // custom messages for radio buttons and checkboxes
-	                tnc: {
-	                    required: "Please accept TNC first."
-	                }
+                    email: {
+                    	email :"请填写正确的邮箱地址",
+                        required: "邮箱为必输项"
+                    },
+                    username: {
+                        required: "用户名为必输项"
+                    },
+                    password: {
+                        required: "密码为必输项"
+                    }
+
 	            },
 
 	            invalidHandler: function (event, validator) { //display error alert on form submit   
@@ -217,7 +209,44 @@ var Login = function () {
 	            },
 
 	            submitHandler: function (form) {
-	                form.submit();
+	            	alert("校验时提交了");
+
+                    var _password = $("#register-form [name=password]").val();
+                    var _username = $("#register-form [name=username]").val();
+                    var _email = $("#register-form [name=email]").val();
+                    form.submit(function () {
+                        $.ajax({
+                            type: "POST",
+                            url: "user/register",
+                            data: {password: _password, username: _username, email: _email},
+                            dataType: 'json',
+                            success: function (obj) {
+                                console.log(obj)
+                                if (obj.rspCode == '00') {
+                                    // 注册成功，去首页
+                                    window.open('/index', '');
+                                } else {
+                                    $("#errorMsg").html(obj.rspMsg);
+                                    $("#errorMsg").show();
+                                }
+                            },
+
+                            error: function (response) {
+                                console.log(response)
+                                //请求出错处理
+                                if (response.data.rspCode == '00') {
+                                    // 注册成功，去首页
+                                    window.open('/index', '');
+                                } else {
+                                    $("#errorMsg").html(response.data.rspMsg);
+                                    $("#errorMsg").show();
+                                }
+                            }
+
+
+                        });
+                    });
+
 	            }
 	        });
 

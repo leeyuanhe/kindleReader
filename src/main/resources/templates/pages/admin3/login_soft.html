@@ -128,8 +128,8 @@ License: You must have a valid license purchased only from themeforest(the above
 	<!-- END FORGOT PASSWORD FORM -->
 	<!-- BEGIN REGISTRATION FORM -->
 
-	<div id="registPage">
-	<form class="register-form" onsubmit="return false" method="post">
+
+	<form class="register-form" method="post" onsubmit="return false">
 		<h3>注册</h3>
 		<div class="alert alert-danger display-hide"  id="errorMsg">
 			<button class="close" data-close="alert"></button>
@@ -139,7 +139,7 @@ License: You must have a valid license purchased only from themeforest(the above
 			<label class="control-label visible-ie8 visible-ie9">Email</label>
 			<div class="input-icon">
 				<i class="fa fa-envelope"></i>
-				<input class="form-control placeholder-no-fix" type="text" placeholder="邮箱" name="email" v-model="email"/>
+				<input class="form-control placeholder-no-fix" type="text" placeholder="邮箱" name="email"  />
 			</div>
 		</div>
 
@@ -148,7 +148,7 @@ License: You must have a valid license purchased only from themeforest(the above
 			<div class="input-icon">
 				<i class="fa fa-user"></i>
 				<input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="用户名"
-					   name="username" v-model="username"/>
+					   name="username"/>
 			</div>
 		</div>
 		<div class="form-group">
@@ -156,7 +156,7 @@ License: You must have a valid license purchased only from themeforest(the above
 			<div class="input-icon">
 				<i class="fa fa-lock"></i>
 				<input class="form-control placeholder-no-fix" type="password" autocomplete="off"
-					   id="register_password" placeholder="密码" name="password" v-model="password"/>
+					   id="register_password" placeholder="密码" name="password"/>
 			</div>
 		</div>
 		<div class="form-group">
@@ -172,12 +172,12 @@ License: You must have a valid license purchased only from themeforest(the above
 		<div class="form-actions">
 			<button id="register-back-btn" type="button" class="btn">
 			<i class="m-icon-swapleft"></i> 返回 </button>
-			<button v-on:click="regist" type="submit" id="register-submit-btn" class="btn blue pull-right">
-			注册 <i class="m-icon-swapright m-icon-white"></i>
+			<button  type="submit " id="register-submit-btn" class="btn blue pull-right" >
+			注册 <i class="m-icon-swapright m-icon-white" ></i>
 			</button>
 		</div>
 	</form>
-	</div>
+	<!--</div>-->
 	<!-- END REGISTRATION FORM -->
 </div>
 <!-- END LOGIN -->
@@ -190,6 +190,8 @@ License: You must have a valid license purchased only from themeforest(the above
 
 <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 <!-- BEGIN CORE PLUGINS -->
+
+
 <!--[if lt IE 9]>
 <script src="/assets/global/plugins/respond.min.js"></script>
 <script src="/assets/global/plugins/excanvas.min.js"></script> 
@@ -213,79 +215,90 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="/assets/admin/pages/scripts/login-soft.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 
-<!--custom js-->
-<script th:src="@{/webjars/vue/2.4.2/vue.min.js}"></script>
-<script th:src="@{/webjars/vue-resource/1.2.1/dist/vue-resource.min.js}"></script>
-<!--<script th:src="@{/vendor/parsleyjs/dist/parsley.min.js}"></script>-->
-
-
-
 <script>
-jQuery(document).ready(function() {     
-  Metronic.init(); // init metronic core components
-	Layout.init(); // init current layout
- 	Login.init();
-  	Demo.init();
-       // init background slide images
-       $.backstretch([
-        "/assets/admin/pages/media/bg/1.jpg",
-        "/assets/admin/pages/media/bg/2.jpg",
-        "/assets/admin/pages/media/bg/3.jpg",
-        "/assets/admin/pages/media/bg/4.jpg"
-        ], {
-          fade: 1000,
-          duration: 8000
-    }
-    );
 
-    //记住密码功能
-    var str = getCookie("username");
-    if (str.length > 0){
-        $("#loginname").val(str);
-        return;
-	}
 
-    str = str.substring(1,str.length-1);
-    var username = str.split(",")[0];
-    var password = str.split(",")[1];
-    var flag = str.split(",")[2];
-    //自动填充用户名和密码
-    $("input[name='username']").val(username);
-    $("input[name='password']").val(password);
-    //记住密码功能
+		jQuery(document).ready(function() {
+			//初始化页面
+			Metronic.init(); // init metronic core components
+			Layout.init(); // init current layout
+			Login.init();
+			Demo.init();
+			   // init background slide images
+			   $.backstretch([
+				"/assets/admin/pages/media/bg/1.jpg",
+				"/assets/admin/pages/media/bg/2.jpg",
+				"/assets/admin/pages/media/bg/3.jpg",
+				"/assets/admin/pages/media/bg/4.jpg"
+				], {
+				  fade: 1000,
+				  duration: 8000
+					}
+			 );
 
-    Vue.http.options.emulateJSON = true;
-    var registPage = new Vue({
-        el: '#registPage',
-        data: {
-            'email': '',
-            'password': '',
-            'username':''
-        },
-        methods: {
-            regist: function(event){
+		//记住密码功能
+		var str = getCookie("username");
+		if (str.length > 0){
+			$("#loginname").val(str);
+			return;
+		}
 
-                var datas={
-                    email: this.email,
-                    passWord: this.password,
-                    username: this.username
-                };
-                this.$http.post('/user/register',datas).then(function(response){
-                    if(response.data.rspCode == '00'){
-                        window.open('/index', '');
-                    }else{
-                        $("#errorMsg").html(response.data.rspMsg);
-                        $("#errorMsg").show();
-                    }
-                }, function(response){
-                    console.log('error');
-                })
-            }
+		str = str.substring(1,str.length-1);
+		var username = str.split(",")[0];
+		var password = str.split(",")[1];
+		var flag = str.split(",")[2];
+		//自动填充用户名和密码
+		$("input[name='username']").val(username);
+		$("input[name='password']").val(password);
+		//记住密码功能
+	});
+
+
+		function registerCit() {
+			/*var user = {};
+           user.password = $("#register-form [name=password]").val();
+           user.username = $("#register-form [name=username]").val();
+           user.email = $("#register-form [name=email]").val();*/
+            var _password = $("#register-form [name=password]").val();
+            var _username = $("#register-form [name=username]").val();
+            var _email = $("#register-form [name=email]").val();
+
+           var form = $(".register-form");
+
+               form.submit(function () {
+
+                   $.ajax({
+                       type: "POST",
+                       url: "user/register",
+                       data: {password: _password, username: _username, email: _email},
+                       dataType: 'json',
+                       success: function (obj) {
+                        console.log(obj)
+                              if (obj.rspCode == '00') {
+                               // 注册成功，去首页
+                               window.open('/index', '');
+                           } else {
+                               $("#errorMsg").html(obj.rspMsg);
+                               $("#errorMsg").show();
+                           }
+                       },
+
+                       error: function (response) {
+                           console.log(response)
+                           //请求出错处理
+                           if (response.data.rspCode == '00') {
+                               // 注册成功，去首页
+                               window.open('/index', '');
+                           } else {
+                               $("#errorMsg").html(response.data.rspMsg);
+                               $("#errorMsg").show();
+                           }
+                       }
+
+
+                   });
+               });
         }
-    })
-
-
-});
 
 //获取cookie
 function getCookie(cname) {

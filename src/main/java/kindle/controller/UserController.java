@@ -58,19 +58,17 @@ public class UserController extends BaseController {
 
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public Response registerUser(@ModelAttribute User user, HttpServletResponse response) {
+    public Response registerUser(User user, HttpServletResponse response) {
 
         User byUserName = userRepository.findByUsername(user.getUsername());
         if (!CommonUtils.isEmpty(byUserName)) {
             return result(ExceptionMsg.UserNameUsed);
-
         }
 
         User byEmail = userRepository.findByEmail(user.getEmail());
 
         if (!CommonUtils.isEmpty(byEmail)) {
             return result(ExceptionMsg.EmailUsed);
-
         }
         String salt = PasswordUtils.generateRandomSalt();
         user.setPassword(PasswordUtils.getMD5(user.getPassword() + salt));
