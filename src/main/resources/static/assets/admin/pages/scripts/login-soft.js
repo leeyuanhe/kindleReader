@@ -209,43 +209,6 @@ var Login = function () {
 	            },
 
 	            submitHandler: function (form) {
-	            	alert("校验时提交了");
-
-                    var _password = $("#register-form [name=password]").val();
-                    var _username = $("#register-form [name=username]").val();
-                    var _email = $("#register-form [name=email]").val();
-                    form.submit(function () {
-                        $.ajax({
-                            type: "POST",
-                            url: "user/register",
-                            data: {password: _password, username: _username, email: _email},
-                            dataType: 'json',
-                            success: function (obj) {
-                                console.log(obj)
-                                if (obj.rspCode == '00') {
-                                    // 注册成功，去首页
-                                    window.open('/index', '');
-                                } else {
-                                    $("#errorMsg").html(obj.rspMsg);
-                                    $("#errorMsg").show();
-                                }
-                            },
-
-                            error: function (response) {
-                                console.log(response)
-                                //请求出错处理
-                                if (response.data.rspCode == '00') {
-                                    // 注册成功，去首页
-                                    window.open('/index', '');
-                                } else {
-                                    $("#errorMsg").html(response.data.rspMsg);
-                                    $("#errorMsg").show();
-                                }
-                            }
-
-
-                        });
-                    });
 
 	            }
 	        });
@@ -268,6 +231,8 @@ var Login = function () {
 	            jQuery('.login-form').show();
 	            jQuery('.register-form').hide();
 	        });
+
+
 	}
     
     return {

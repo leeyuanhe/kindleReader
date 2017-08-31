@@ -5,16 +5,12 @@ import com.sun.deploy.net.URLEncoder;
 import kindle.pojo.User;
 import kindle.pojo.result.ExceptionMsg;
 import kindle.pojo.result.Response;
-import kindle.pojo.result.ResponseData;
 import kindle.repository.UserRepository;
 import kindle.utils.CommonUtils;
 import kindle.utils.Constants;
 import kindle.utils.PasswordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;

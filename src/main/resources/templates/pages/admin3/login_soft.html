@@ -129,7 +129,7 @@ License: You must have a valid license purchased only from themeforest(the above
 	<!-- BEGIN REGISTRATION FORM -->
 
 
-	<form class="register-form" method="post" onsubmit="return false">
+	<form class="register-form"  method="post">
 		<h3>注册</h3>
 		<div class="alert alert-danger display-hide"  id="errorMsg">
 			<button class="close" data-close="alert"></button>
@@ -139,7 +139,7 @@ License: You must have a valid license purchased only from themeforest(the above
 			<label class="control-label visible-ie8 visible-ie9">Email</label>
 			<div class="input-icon">
 				<i class="fa fa-envelope"></i>
-				<input class="form-control placeholder-no-fix" type="text" placeholder="邮箱" name="email"  />
+				<input class="form-control placeholder-no-fix" id="register_email" type="text" placeholder="邮箱" name="email"  />
 			</div>
 		</div>
 
@@ -147,7 +147,7 @@ License: You must have a valid license purchased only from themeforest(the above
 			<label class="control-label visible-ie8 visible-ie9">Username</label>
 			<div class="input-icon">
 				<i class="fa fa-user"></i>
-				<input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="用户名"
+				<input class="form-control placeholder-no-fix" id="register_name" type="text" autocomplete="off" placeholder="用户名"
 					   name="username"/>
 			</div>
 		</div>
@@ -172,7 +172,7 @@ License: You must have a valid license purchased only from themeforest(the above
 		<div class="form-actions">
 			<button id="register-back-btn" type="button" class="btn">
 			<i class="m-icon-swapleft"></i> 返回 </button>
-			<button  type="submit " id="register-submit-btn" class="btn blue pull-right" >
+			<button  type="button " id="register-submit-btn" class="btn blue pull-right" >
 			注册 <i class="m-icon-swapright m-icon-white" ></i>
 			</button>
 		</div>
@@ -253,52 +253,56 @@ License: You must have a valid license purchased only from themeforest(the above
 		//记住密码功能
 	});
 
+		//提交表单
 
-		function registerCit() {
-			/*var user = {};
-           user.password = $("#register-form [name=password]").val();
-           user.username = $("#register-form [name=username]").val();
-           user.email = $("#register-form [name=email]").val();*/
-            var _password = $("#register-form [name=password]").val();
-            var _username = $("#register-form [name=username]").val();
-            var _email = $("#register-form [name=email]").val();
+        $('button#register-submit-btn').click( function() {
 
-           var form = $(".register-form");
+            var user = {};
+            user.password = $("#register_password").val();
+            user.username =  $("#register_name").val();
+            user.email =  $("#register_email").val();
 
-               form.submit(function () {
+            var form = $(".register-form");
+			if(!form.valid()){
+                $("#errorMsg").html("请输入必输项");
+                $("#errorMsg").show();
+                return;
+			}
 
-                   $.ajax({
-                       type: "POST",
-                       url: "user/register",
-                       data: {password: _password, username: _username, email: _email},
-                       dataType: 'json',
-                       success: function (obj) {
+            form.submit(function () {
+
+                $.ajax({
+                    type: "POST",
+                    url: "user/register",
+                    data: user,
+                    success: function (obj) {
                         console.log(obj)
-                              if (obj.rspCode == '00') {
-                               // 注册成功，去首页
-                               window.open('/index', '');
-                           } else {
-                               $("#errorMsg").html(obj.rspMsg);
-                               $("#errorMsg").show();
-                           }
-                       },
+                        if (obj.rspCode == '00') {
+                            // 注册成功，去首页
+                            window.open('/index', '');
+                        } else {
+                            $("#errorMsg").html(obj.rspMsg);
+                            $("#errorMsg").show();
+                        }
+                    },
 
-                       error: function (response) {
-                           console.log(response)
-                           //请求出错处理
-                           if (response.data.rspCode == '00') {
-                               // 注册成功，去首页
-                               window.open('/index', '');
-                           } else {
-                               $("#errorMsg").html(response.data.rspMsg);
-                               $("#errorMsg").show();
-                           }
-                       }
+                    error: function (response) {
+                        console.log(response)
+                        //请求出错处理
+                        if (response.data.rspCode == '00') {
+                            // 注册成功，去首页
+                            window.open('/index', '');
+                        } else {
+                            $("#errorMsg").html(response.data.rspMsg);
+                            $("#errorMsg").show();
+                        }
+                    }
 
 
-                   });
-               });
-        }
+                });
+            });
+        });
+
 
 //获取cookie
 function getCookie(cname) {
