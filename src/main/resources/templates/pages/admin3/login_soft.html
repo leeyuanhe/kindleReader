@@ -62,12 +62,12 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- BEGIN LOGIN -->
 <div class="content">
 	<!-- BEGIN LOGIN FORM -->
-	<form class="login-form"  th:action="@{/user/login}"
-		  method="post" >
+	<form class="login-form"   method="post" >
+
 		<h3 class="form-title">登录</h3>
-		<div class="alert alert-danger"  th:if="${#httpServletRequest.getParameter('message')}">
+		<div class="alert alert-danger display-hide" id="errorLoginMessage">
 			<button class="close" data-close="alert"></button>
-			<span th:text="${#httpServletRequest.getParameter('message')}"></span>
+
 		</div>
 		<div class="form-group">
 			<!--ie8, ie9 does not support html5 placeholder, so we just show field title for that request.getCookies()-->
@@ -83,13 +83,13 @@ License: You must have a valid license purchased only from themeforest(the above
 			<div class="input-icon">
 				<i class="fa fa-lock"></i>
 				<input class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="密码"
-					   name="password"  />
+					   name="password"  id="loginpassword"/>
 			</div>
 		</div>
 		<div class="form-actions">
 			<label class="checkbox">
-			<input type="checkbox" name="remember" value="1"/> 记住密码 </label>
-			<button type="submit" class="btn blue pull-right">
+			<input type="checkbox" name="remember" id="rememberflag" value="1"/> 记住密码 </label>
+			<button type="submit"  id="login-button-btn" class="btn blue pull-right" >
 			登录 <i class="m-icon-swapright m-icon-white"></i>
 			</button>
 		</div>
@@ -219,58 +219,83 @@ License: You must have a valid license purchased only from themeforest(the above
 
 
 		jQuery(document).ready(function() {
-			//初始化页面
-			Metronic.init(); // init metronic core components
-			Layout.init(); // init current layout
-			Login.init();
-			Demo.init();
-			   // init background slide images
-			   $.backstretch([
-				"/assets/admin/pages/media/bg/1.jpg",
-				"/assets/admin/pages/media/bg/2.jpg",
-				"/assets/admin/pages/media/bg/3.jpg",
-				"/assets/admin/pages/media/bg/4.jpg"
-				], {
-				  fade: 1000,
-				  duration: 8000
-					}
-			 );
+            //初始化页面
+            Metronic.init(); // init metronic core components
+            Layout.init(); // init current layout
+            Login.init();
+            Demo.init();
+            // init background slide images
+            $.backstretch([
+                    "/assets/admin/pages/media/bg/1.jpg",
+                    "/assets/admin/pages/media/bg/2.jpg",
+                    "/assets/admin/pages/media/bg/3.jpg",
+                    "/assets/admin/pages/media/bg/4.jpg"
+                ], {
+                    fade: 1000,
+                    duration: 8000
+                }
+            );
 
-		//记住密码功能
-		var str = getCookie("username");
-		if (str.length > 0){
-			$("#loginname").val(str);
-			return;
-		}
+            //记住密码功能
+            var str = decodeURI(getCookie("login_user_info"));
 
-		str = str.substring(1,str.length-1);
-		var username = str.split(",")[0];
-		var password = str.split(",")[1];
-		var flag = str.split(",")[2];
-		//自动填充用户名和密码
-		$("input[name='username']").val(username);
-		$("input[name='password']").val(password);
-		//记住密码功能
+		  if (str.length > 0){
+			str = str.substring(32, str.length);
+            //自动填充用户名和密码
+            $("#loginname").val(str);
+            $("#loginpassword").val("**************");
+		    $('#rememberflag input[name=remember]:checked').val();
+          }
 	});
 
-		//提交表单
 
+		//登录提交表单
+        $('button#login-button-btn').click( function() {
+
+            var form = $(".login-form");
+            if(!form.valid()){
+                $("#errorLoginMessage").html("请输入必输项");
+                $("#errorLoginMessage").show();
+                return;
+            }
+            form.submit(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "user/login",
+                    data: form.serialize(),
+                    success: function (obj) {
+                        console.log(obj)
+                        if (obj.rspCode == '00') {
+                            // 注册成功，去首页
+                            window.open('/index', '');
+                        } else {
+                            $("#errorLoginMessage").html(obj.rspMsg);
+                            $("#errorLoginMessage").show();
+                        }
+                    }
+
+                });
+            });
+
+		});
+
+
+
+        //注册提交表单
         $('button#register-submit-btn').click( function() {
 
             var user = {};
             user.password = $("#register_password").val();
             user.username =  $("#register_name").val();
             user.email =  $("#register_email").val();
-
             var form = $(".register-form");
-			if(!form.valid()){
+            if(!form.valid()){
                 $("#errorMsg").html("请输入必输项");
                 $("#errorMsg").show();
                 return;
-			}
+            }
 
             form.submit(function () {
-
                 $.ajax({
                     type: "POST",
                     url: "user/register",
@@ -284,21 +309,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             $("#errorMsg").html(obj.rspMsg);
                             $("#errorMsg").show();
                         }
-                    },
-
-                    error: function (response) {
-                        console.log(response)
-                        //请求出错处理
-                        if (response.data.rspCode == '00') {
-                            // 注册成功，去首页
-                            window.open('/index', '');
-                        } else {
-                            $("#errorMsg").html(response.data.rspMsg);
-                            $("#errorMsg").show();
-                        }
                     }
-
-
                 });
             });
         });

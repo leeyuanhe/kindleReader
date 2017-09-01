@@ -1,6 +1,9 @@
 package kindle;
 
 
+import kindle.filter.SecurityFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -13,6 +16,19 @@ import java.net.URISyntaxException;
 
 @Configuration
 public class WebMvcConfigure extends WebMvcConfigurerAdapter {
+
+
+    @Bean
+    public FilterRegistrationBean someFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new SecurityFilter());
+        registration.addUrlPatterns("/user/login");
+        registration.addInitParameter("paramName", "paramValue");
+        registration.setName("sessionFilter");
+        registration.setOrder(1);
+        return registration;
+    }
+
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {

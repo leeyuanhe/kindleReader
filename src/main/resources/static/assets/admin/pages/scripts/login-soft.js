@@ -45,14 +45,14 @@ var Login = function () {
 	            },
 
 	            submitHandler: function (form) {
-	                form.submit();
+	                // form.submit();
 	            }
 	        });
 
 	        $('.login-form input').keypress(function (e) {
 	            if (e.which == 13) {
 	                if ($('.login-form').validate().form()) {
-	                    $('.login-form').submit();
+	                    // $('.login-form').submit();
 	                }
 	                return false;
 	            }
@@ -180,6 +180,9 @@ var Login = function () {
                     },
                     password: {
                         required: "密码为必输项"
+                    },
+                    rpassword: {
+                        equalTo: "两次输入的密码不一致"
                     }
 
 	            },
@@ -245,5 +248,7 @@ var Login = function () {
         }
 
     };
+
+
 
 }();

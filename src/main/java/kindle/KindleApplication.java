@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * @description 启动类
@@ -12,7 +13,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  * @param
  */
 
-@SpringBootApplication
+@SpringBootApplication()
 public class KindleApplication extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {

@@ -10,4 +10,10 @@ public class Constants {
 
     /**保存半小时*/
     public static final int COOKIE_USERNAME_TIMEOUT = 30*60;
+    /**记住密码*/
+    public static final String REMEMBER_FLAG = "1";
+    /**cookie名称*/
+    public static final String COOKIE_NAME = "login_user_info";
+    /**session user key*/
+    public static final String SESSSION_USER_KEY = "session_user_info";
 }
