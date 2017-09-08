@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.Date;
 
 @RestController
@@ -31,7 +32,6 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Response login(@ModelAttribute User user, HttpServletRequest request, HttpServletResponse response) {
-        ModelAndView mv = new ModelAndView();
         String remember = request.getParameter("remember");
         try {
             User byUsernameOrEmail = userRepository.findUserByUsernameOrEmail(user.getUsername(), user.getUsername());
@@ -47,11 +47,17 @@ public class UserController extends BaseController {
             String cookieValue = CookieUtils.getCookieValue(request, Constants.COOKIE_NAME);
 
             if (Constants.REMEMBER_FLAG.equals(remember)) {
-                String uuid = RandomUtils.generateMixString(32);
-                rememberRepository.save(new Remember(uuid,user));
-                CookieUtils.addCookie(response,Constants.COOKIE_NAME,uuid+user.getUsername(),Constants.COOKIE_USERNAME_TIMEOUT);
+                String invariable_series = PasswordUtils.getMD5(RandomUtils.generateMixString(32));
+                String token = PasswordUtils.getMD5(RandomUtils.generateMixString(64));
+                String key = URLEncoder.encode(invariable_series+Constants.SEPRETOR_FLAG+user.getUsername()+Constants
+                        .SEPRETOR_FLAG+token, "utf-8");
+
+                rememberRepository.save(new Remember(invariable_series,token,user));
+                CookieUtils.addCookie(response,Constants.COOKIE_NAME,key,Constants
+                        .COOKIE_USERNAME_TIMEOUT);
             }else if (!Constants.REMEMBER_FLAG.equals(remember) && !CommonUtils.isEmpty(cookieValue)){
-                String cookieUuid = cookieValue.substring(0,32);
+                String[] split = cookieValue.split(Constants.SEPRETOR_FLAG);
+                String cookieUuid = split[0];
                 rememberRepository.deleteByUuid(cookieUuid);
                 CookieUtils.removeCookie(response, Constants.COOKIE_NAME);
             }

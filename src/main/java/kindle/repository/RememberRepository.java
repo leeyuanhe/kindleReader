@@ -14,4 +14,5 @@ public interface RememberRepository extends MongoRepository<Remember,String> {
    Remember findByUuid(String uuid);
 
    void deleteByUuid(String uuid);
+
 }

@@ -13,7 +13,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
 <head>
@@ -88,7 +88,7 @@ License: You must have a valid license purchased only from themeforest(the above
 		</div>
 		<div class="form-actions">
 			<label class="checkbox">
-			<input type="checkbox" name="remember" id="rememberflag" value="1"/> 记住密码 </label>
+			<input type="checkbox" name="remember" id="rememberflag" value="1" /> 记住密码 </label>
 			<button type="submit"  id="login-button-btn" class="btn blue pull-right" >
 			登录 <i class="m-icon-swapright m-icon-white"></i>
 			</button>
@@ -194,7 +194,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
 <!--[if lt IE 9]>
 <script src="/assets/global/plugins/respond.min.js"></script>
-<script src="/assets/global/plugins/excanvas.min.js"></script> 
+<script src="/assets/global/plugins/excanvas.min.js"></script>
 <![endif]-->
 <script src="/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="/assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
@@ -219,6 +219,15 @@ License: You must have a valid license purchased only from themeforest(the above
 
 
 		jQuery(document).ready(function() {
+            //点了记住我自动填写表单
+            var str = decodeURI(getCookie("rememberme"));
+            if (str.length > 0){
+                str = str.match(/%3D(\S*)%3D/)[1];
+                //自动填充用户名和密码
+                $("#loginname").val(str);
+                $("#loginpassword").val("**************");
+                $("#rememberflag").prop("checked",true);
+            }
             //初始化页面
             Metronic.init(); // init metronic core components
             Layout.init(); // init current layout
@@ -236,16 +245,6 @@ License: You must have a valid license purchased only from themeforest(the above
                 }
             );
 
-            //记住密码功能
-            var str = decodeURI(getCookie("login_user_info"));
-
-		  if (str.length > 0){
-			str = str.substring(32, str.length);
-            //自动填充用户名和密码
-            $("#loginname").val(str);
-            $("#loginpassword").val("**************");
-		    $('#rememberflag input[name=remember]:checked').val();
-          }
 	});
 
 
@@ -266,8 +265,8 @@ License: You must have a valid license purchased only from themeforest(the above
                     success: function (obj) {
                         console.log(obj)
                         if (obj.rspCode == '00') {
-                            // 注册成功，去首页
-                            window.open('/index', '');
+                            // 登陆成功，去首页
+                            window.open("/index", "_self");
                         } else {
                             $("#errorLoginMessage").html(obj.rspMsg);
                             $("#errorLoginMessage").show();
@@ -294,7 +293,6 @@ License: You must have a valid license purchased only from themeforest(the above
                 $("#errorMsg").show();
                 return;
             }
-
             form.submit(function () {
                 $.ajax({
                     type: "POST",

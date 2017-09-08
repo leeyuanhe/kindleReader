@@ -5,16 +5,17 @@ import kindle.pojo.User;
 import kindle.repository.RememberRepository;
 import kindle.utils.Constants;
 import kindle.utils.CookieUtils;
+import kindle.utils.PasswordUtils;
+import kindle.utils.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 
 /**
@@ -44,20 +45,28 @@ public class SecurityFilter implements Filter {
         System.out.println(">>>>>>>>>>启动过滤器");
         if (user == null) {
             String uuid = CookieUtils.getCookieValue(request, Constants.COOKIE_NAME);
+
             if (uuid != null) {
-                uuid = uuid.substring(0, 32);
-                Remember remember = rememberRepository.findByUuid(uuid);
+                uuid = URLDecoder.decode(uuid,"utf-8");
+                String[] split = uuid.split(Constants.SEPRETOR_FLAG);
+                String cookieUuid = split[0];
+                Remember remember = rememberRepository.findByUuid(cookieUuid);
                 user = remember.getUser();
                 if (user != null) {
                     request.getSession().setAttribute(Constants.SESSSION_USER_KEY, user); // Login.
-                    CookieUtils.addCookie(response, Constants.COOKIE_NAME, uuid + user.getUsername(), Constants
+
+                    String invariable_series = remember.getUuid();
+                    String token = PasswordUtils.getMD5(RandomUtils.generateMixString(64));
+                    String key = invariable_series+Constants.SEPRETOR_FLAG+token;
+                    remember.setToken(token);
+                    rememberRepository.save(remember);
+                    CookieUtils.addCookie(response, Constants.COOKIE_NAME, key, Constants
                             .COOKIE_USERNAME_TIMEOUT);
                     request.getRequestDispatcher("/pages/admin3/index.html").forward(request,response);
-                    return;
+
                 } else {
                     CookieUtils.removeCookie(response, Constants.COOKIE_NAME);
-                    response.sendRedirect("/");
-                    return;
+                    request.getRequestDispatcher("/pages/admin3/index.html").forward(request,response);
                 }
             }else{
                 chain.doFilter(req, res);
@@ -70,8 +79,7 @@ public class SecurityFilter implements Filter {
             response.sendRedirect("/");
             return;
         } else {
-            request.getRequestDispatcher("/pages/admin3/index.html").forward(request,response);
-            return;
+            request.getRequestDispatcher("templates/pages/admin3/index.html").forward(request,response);
         }
 
 

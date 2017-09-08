@@ -9,13 +9,15 @@ package kindle.pojo;
 public class Remember {
 
     private String uuid;
+    private String token;
     private User user;
 
     public Remember() {
     }
 
-    public Remember(String uuid, User user) {
+    public Remember(String uuid,String token, User user) {
         this.uuid = uuid;
+        this.token = token;
         this.user = user;
     }
 
@@ -33,5 +35,13 @@ public class Remember {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
