@@ -2,15 +2,11 @@ buildscript {
 
     repositories {
         maven{url "http://maven.aliyun.com/nexus/content/repositories/central"}
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
         jcenter()
     }
 
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.2.RELEASE")
-        classpath "com.cuisongliu.plugin:mybatis-generator:0.9.4"
     }
 }
 
@@ -21,7 +17,6 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'org.springframework.boot'
-apply plugin: "com.cuisongliu.plugin.mybatis-generator"
 apply plugin: 'idea'
 
 sourceCompatibility = 1.8
@@ -59,21 +54,3 @@ dependencies {
 
 }
 
-mbg {
-    overwrite = false
-    consoleable = true
-    jdbc{
-        driver = "com.mysql.jdbc.Driver"
-        url    = "jdbc:mysql://localhost/mysqltest?useSSL=false"
-        username = "root"
-        password = "1234"
-    }
-    xml{
-        resourcesProject = "src/main/java"
-        mapperPlugin = tk.mybatis.mapper.generator.MapperPlugin.class
-        mapperMapper = "kindle.utils.MyMapper"
-        mapperPackage= "kindle.mapper"
-        modelPackage = "kindle.pojo"
-        xmlPackage =   "mapper"
-    }
-}

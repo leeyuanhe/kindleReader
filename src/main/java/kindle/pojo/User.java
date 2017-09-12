@@ -2,9 +2,8 @@ package kindle.pojo;
 
 import java.util.Date;
 
-public class User {
+public class User  extends BaseEntity{
 
-    private String id;
     private String username;
     private String email;
     private String password;
@@ -13,13 +12,7 @@ public class User {
     private String salt;
 
 
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;

@@ -6,39 +6,24 @@ package kindle.pojo;
  * @date 2017-09-01
  * @param
  */
-public class Remember {
+public class Remember extends BaseEntity{
 
-    private String id;
+
     private String invariableSeries;
     private String token;
-    private String userName;
-    private User user;
+    private Integer userId;
 
-    public Remember() {
+
+    public Integer getUserId() {
+        return userId;
     }
 
-    public Remember(String invariableSeries, String token, String userName, User user) {
-        this.invariableSeries = invariableSeries;
-        this.token = token;
-        this.userName = userName;
-        this.user = user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 
     public String getInvariableSeries() {
         return invariableSeries;
@@ -48,13 +33,7 @@ public class Remember {
         this.invariableSeries = invariableSeries;
     }
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     public String getToken() {
         return token;
