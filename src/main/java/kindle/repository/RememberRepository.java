@@ -11,8 +11,10 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  */
 public interface RememberRepository extends MongoRepository<Remember,String> {
 
-   Remember findByUuid(String uuid);
+   Remember findByInvariableSeries(String invariableSeries);
 
-   void deleteByUuid(String uuid);
+   Remember findByUserName(String userName);
+
+   void deleteByInvariableSeries(String invariableSeries);
 
 }

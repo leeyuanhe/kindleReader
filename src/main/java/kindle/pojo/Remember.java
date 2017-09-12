@@ -8,25 +8,44 @@ package kindle.pojo;
  */
 public class Remember {
 
-    private String uuid;
+    private String id;
+    private String invariableSeries;
     private String token;
+    private String userName;
     private User user;
 
     public Remember() {
     }
 
-    public Remember(String uuid,String token, User user) {
-        this.uuid = uuid;
+    public Remember(String invariableSeries, String token, String userName, User user) {
+        this.invariableSeries = invariableSeries;
         this.token = token;
+        this.userName = userName;
         this.user = user;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getId() {
+        return id;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getInvariableSeries() {
+        return invariableSeries;
+    }
+
+    public void setInvariableSeries(String invariableSeries) {
+        this.invariableSeries = invariableSeries;
     }
 
     public User getUser() {

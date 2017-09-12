@@ -32,7 +32,7 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Response login(@ModelAttribute User user, HttpServletRequest request, HttpServletResponse response) {
-        String remember = request.getParameter("remember");
+        String rememberStr = request.getParameter("remember");
         try {
             User byUsernameOrEmail = userRepository.findUserByUsernameOrEmail(user.getUsername(), user.getUsername());
 
@@ -46,19 +46,29 @@ public class UserController extends BaseController {
             //记住我功能cookie处理
             String cookieValue = CookieUtils.getCookieValue(request, Constants.COOKIE_NAME);
 
-            if (Constants.REMEMBER_FLAG.equals(remember)) {
+            Remember remember ;
+            if (Constants.REMEMBER_FLAG.equals(rememberStr)) {
                 String invariable_series = PasswordUtils.getMD5(RandomUtils.generateMixString(32));
                 String token = PasswordUtils.getMD5(RandomUtils.generateMixString(64));
                 String key = URLEncoder.encode(invariable_series+Constants.SEPRETOR_FLAG+user.getUsername()+Constants
                         .SEPRETOR_FLAG+token, "utf-8");
 
-                rememberRepository.save(new Remember(invariable_series,token,user));
+                remember = rememberRepository.findByUserName(user.getUsername());
+                if (CommonUtils.isEmpty(remember)){
+                    remember = new Remember(invariable_series,token,user.getUsername(),user);
+                }else{
+                    remember.setInvariableSeries(invariable_series);
+                    remember.setToken(token);
+                    remember.setUserName(user.getUsername());
+                    remember.setUser(user);
+                }
+                rememberRepository.save(remember);
                 CookieUtils.addCookie(response,Constants.COOKIE_NAME,key,Constants
                         .COOKIE_USERNAME_TIMEOUT);
-            }else if (!Constants.REMEMBER_FLAG.equals(remember) && !CommonUtils.isEmpty(cookieValue)){
+            }else if (!Constants.REMEMBER_FLAG.equals(rememberStr) && !CommonUtils.isEmpty(cookieValue)){
                 String[] split = cookieValue.split(Constants.SEPRETOR_FLAG);
                 String cookieUuid = split[0];
-                rememberRepository.deleteByUuid(cookieUuid);
+                rememberRepository.deleteByInvariableSeries(cookieUuid);
                 CookieUtils.removeCookie(response, Constants.COOKIE_NAME);
             }
 

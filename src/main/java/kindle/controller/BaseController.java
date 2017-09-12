@@ -4,6 +4,7 @@ package kindle.controller;
 import kindle.pojo.result.ExceptionMsg;
 import kindle.pojo.result.Response;
 import kindle.utils.CommonUtils;
+import kindle.utils.Constants;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,6 +57,20 @@ public class BaseController {
     public ModelAndView index(){
         ModelAndView mv = new ModelAndView();
         mv.setViewName("pages/admin3/index");
+        return mv;
+    }
+
+    /**
+     * @description 注销账号
+     * @author hely
+     * @date 2017-09-12
+     * @param
+     */
+    @RequestMapping(value = "/logout",method = RequestMethod.GET)
+    public ModelAndView LogOut(HttpServletRequest request){
+        request.getSession().removeAttribute(Constants.SESSSION_USER_KEY);
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("pages/admin3/login_soft");
         return mv;
     }
 

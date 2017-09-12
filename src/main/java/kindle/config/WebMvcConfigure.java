@@ -1,4 +1,4 @@
-package kindle;
+package kindle.config;
 
 
 import kindle.filter.SecurityFilter;

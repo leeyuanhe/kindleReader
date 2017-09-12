@@ -263,10 +263,16 @@ License: You must have a valid license purchased only from themeforest(the above
                     url: "user/login",
                     data: form.serialize(),
                     success: function (obj) {
-                        console.log(obj)
+
+                        if (JSON.stringify(obj).indexOf("DOCTYPE")){
+                            window.open("/index", "_self");
+                            return;
+						}
+
                         if (obj.rspCode == '00') {
                             // 登陆成功，去首页
                             window.open("/index", "_self");
+                            return;
                         } else {
                             $("#errorLoginMessage").html(obj.rspMsg);
                             $("#errorLoginMessage").show();
