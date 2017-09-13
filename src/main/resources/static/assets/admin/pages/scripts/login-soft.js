@@ -18,7 +18,7 @@ var Login = function () {
 	            },
 
 	            messages: {
-	                username: {
+	                userName: {
 	                    required: "用户名为必输项"
 	                },
 	                password: {
@@ -159,7 +159,7 @@ var Login = function () {
 	                    required: true,
 	                    email: true
 	                },
-	                username: {
+	                userName: {
 	                    required: true
 	                },
 	                password: {

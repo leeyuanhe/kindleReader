@@ -1,7 +1,10 @@
 package kindle.shiro;
 
+import kindle.mapper.UserMapper;
 import kindle.pojo.User;
+import kindle.pojo.UserExample;
 import kindle.repository.UserRepository;
+import kindle.utils.CommonUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationException;
@@ -21,7 +24,7 @@ public class UserRealm extends AuthorizingRealm {
 
     private static final Logger logger = LoggerFactory.getLogger(UserRealm.class);
     @Autowired
-    UserRepository userRepository;
+    UserMapper userMapper;
 
     /**
      * @description 获取授权信息
@@ -35,8 +38,9 @@ public class UserRealm extends AuthorizingRealm {
         List<String> userRoles = new ArrayList<String>();
         List<String> userPermissions = new ArrayList<String>();
 
-        User user = userRepository.findByUsername(currentLoginName);
-        if(null != user){
+        User user = userMapper.selectOne(new User(currentLoginName, null));
+
+        if(!CommonUtils.isEmpty(user)){
             //获取当前用户下所有ACL权限列表  待续。。。
             //获取当前用户下拥有的所有角色列表
           /*  List<Role> roles = roleService.findByUserId(user.getId());
@@ -66,15 +70,15 @@ public class UserRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         System.out.println("###【开始认证[SessionId]】"+ SecurityUtils.getSubject().getSession().getId());
         String loginName = (String)token.getPrincipal();
-        User user = userRepository.findByUsername(loginName);
+        User user = userMapper.selectOne(new User(loginName, null));
         if(user == null) {
             throw new UnknownAccountException();//没找到帐号
         }
         //交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配，如果觉得人家的不好可以自定义实现
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
-                user.getUsername(), //用户名
+                user.getUserName(), //用户名
                 user.getPassword(), //密码
-                ByteSource.Util.bytes(user.getUsername()+user.getSalt()),//salt=username+salt,采用明文访问时，不需要此句
+                ByteSource.Util.bytes(user.getUserName()+user.getSalt()),
                 getName()  //realm name
         );
         return authenticationInfo;

@@ -1,5 +1,6 @@
 package kindle.utils;
 
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import java.math.BigInteger;
@@ -42,4 +43,20 @@ public class PasswordUtils {
         r.nextBytes(salt);
         return Base64.encodeBase64String(salt);
     }
+
+    /**
+     * @description 生成密码
+     * @author hely
+     * @date 2017-09-13
+     * @param
+     */
+    public static String codePassword(String username,String password,String salt){
+        String algorithmName = "MD5";
+        String salt1 = username;
+//        String salt2 = new SecureRandomNumberGenerator().nextBytes().toHex();
+        int hashIterations = 2;//加密次数
+        SimpleHash hash = new SimpleHash(algorithmName, password, username + salt, hashIterations);
+        return hash.toHex();
+    }
+
 }

@@ -1,6 +1,8 @@
 package kindle.filter;
 
+import kindle.mapper.RememberMapper;
 import kindle.pojo.Remember;
+import kindle.pojo.RememberExample;
 import kindle.pojo.User;
 import kindle.repository.RememberRepository;
 import kindle.utils.*;
@@ -24,7 +26,7 @@ import java.net.URLEncoder;
 public class SecurityFilter implements Filter {
 
     @Autowired
-    RememberRepository rememberRepository;
+    RememberMapper rememberMapper;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -46,16 +48,16 @@ public class SecurityFilter implements Filter {
                 uuid = URLDecoder.decode(uuid,"utf-8");
                 String[] split = uuid.split(Constants.SEPRETOR_FLAG);
                 String cookieUuid = split[0];
-                Remember remember = rememberRepository.findByInvariableSeries(cookieUuid);
-                user = remember.getUser();
-                if (user != null) {
+                Remember remember = rememberMapper.selectOne(new Remember(cookieUuid, null, null));
+
+                if (remember != null) {
                     request.getSession().setAttribute(Constants.SESSSION_USER_KEY, user); // Login.
                     String invariable_series = remember.getInvariableSeries();
                     String token = PasswordUtils.getMD5(RandomUtils.generateMixString(64));
-                    String key = URLEncoder.encode(invariable_series+Constants.SEPRETOR_FLAG+user.getUsername()
+                    String key = URLEncoder.encode(invariable_series+Constants.SEPRETOR_FLAG+user.getUserName()
                             +Constants.SEPRETOR_FLAG+token, "utf-8");
                     remember.setToken(token);
-                    rememberRepository.save(remember);
+                    rememberMapper.insert(remember);
                     CookieUtils.addCookie(response, Constants.COOKIE_NAME, key, Constants
                             .COOKIE_USERNAME_TIMEOUT);
                     response.sendRedirect("/index");
@@ -80,7 +82,11 @@ public class SecurityFilter implements Filter {
                 String cookieValue = CookieUtils.getCookieValue(request, Constants.COOKIE_NAME);
                 String[] split = cookieValue.split(Constants.SEPRETOR_FLAG);
                 String cookieUuid = split[0];
-                rememberRepository.deleteByInvariableSeries(cookieUuid);
+              /*  RememberExample rememberExample = new RememberExample();
+                RememberExample.Criteria rememberCri = rememberExample.createCriteria();
+                rememberCri.andInvariableSeriesEqualTo(cookieUuid);
+                rememberMapper.deleteByExample(rememberExample);*/
+                rememberMapper.delete(new Remember(cookieUuid,null,null));
                 CookieUtils.removeCookie(response, Constants.COOKIE_NAME);
             }
             response.sendRedirect("/index");

@@ -14,6 +14,16 @@ public class Remember extends BaseEntity{
     private Integer userId;
 
 
+    public Remember() {
+    }
+
+
+    public Remember(String invariableSeries, String token, Integer userId) {
+        this.invariableSeries = invariableSeries;
+        this.token = token;
+        this.userId = userId;
+    }
+
     public Integer getUserId() {
         return userId;
     }

@@ -75,7 +75,7 @@ License: You must have a valid license purchased only from themeforest(the above
 			<div class="input-icon">
 				<i class="fa fa-user"></i>
 				<input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="用户名|邮箱"
-					   name="username" id="loginname"/>
+					   name="userName" id="loginname"/>
 			</div>
 		</div>
 		<div class="form-group">
@@ -144,11 +144,11 @@ License: You must have a valid license purchased only from themeforest(the above
 		</div>
 
 		<div class="form-group">
-			<label class="control-label visible-ie8 visible-ie9">Username</label>
+			<label class="control-label visible-ie8 visible-ie9">UserName</label>
 			<div class="input-icon">
 				<i class="fa fa-user"></i>
 				<input class="form-control placeholder-no-fix" id="register_name" type="text" autocomplete="off" placeholder="用户名"
-					   name="username"/>
+					   name="userName"/>
 			</div>
 		</div>
 		<div class="form-group">
@@ -264,7 +264,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     data: form.serialize(),
                     success: function (obj) {
 
-                        if (JSON.stringify(obj).indexOf("DOCTYPE")){
+                        if (obj.hasOwnProperty("DOCTYPE")){
                             window.open("/index", "_self");
                             return;
 						}
@@ -291,7 +291,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
             var user = {};
             user.password = $("#register_password").val();
-            user.username =  $("#register_name").val();
+            user.userName =  $("#register_name").val();
             user.email =  $("#register_email").val();
             var form = $(".register-form");
             if(!form.valid()){

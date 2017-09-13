@@ -4,22 +4,28 @@ import java.util.Date;
 
 public class User  extends BaseEntity{
 
-    private String username;
+    private String userName;
     private String email;
     private String password;
     private String ipAddress;
-    private Date cdate;
     private String salt;
 
 
-
-
-    public String getUsername() {
-        return username;
+    public User() {
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public User(String username, String email) {
+        this.userName = username;
+        this.email = email;
+    }
+
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getEmail() {
@@ -46,13 +52,6 @@ public class User  extends BaseEntity{
         this.ipAddress = ipAddress;
     }
 
-    public Date getCdate() {
-        return cdate;
-    }
-
-    public void setCdate(Date cdate) {
-        this.cdate = cdate;
-    }
 
     public String getSalt() {
         return salt;
