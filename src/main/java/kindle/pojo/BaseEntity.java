@@ -1,7 +1,6 @@
 package kindle.pojo;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -15,7 +14,7 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Date createTime;
+    private Date createTime ;
 
     private Date modifyTime;
 

@@ -1,5 +1,7 @@
 package kindle.pojo;
 
+import javax.persistence.*;
+
 /**
  * @description 记住我
  * @author hely
@@ -13,11 +15,11 @@ public class Remember extends BaseEntity{
     private String token;
     private Integer userId;
 
+    @Transient
+    private User user;
 
     public Remember() {
     }
-
-
     public Remember(String invariableSeries, String token, Integer userId) {
         this.invariableSeries = invariableSeries;
         this.token = token;
@@ -32,8 +34,13 @@ public class Remember extends BaseEntity{
         this.userId = userId;
     }
 
+    public User getUser() {
+        return user;
+    }
 
-
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public String getInvariableSeries() {
         return invariableSeries;

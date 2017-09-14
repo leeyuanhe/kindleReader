@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
 
@@ -43,7 +44,7 @@ public class UserController extends BaseController {
         Response result = new Response();
         String rememberStr = request.getParameter("remember");
         try {
-            User byUsernameOrEmail = userMapper.selectOne(user);
+            User byUsernameOrEmail = userService.selectByNameOrEmail(user);
 
             String username = user.getUserName();
             UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassword());
@@ -79,37 +80,7 @@ public class UserController extends BaseController {
                 logger.info("用户[" + username + "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
                 request.getSession().setAttribute(Constants.SESSSION_USER_KEY, user);
                 //记住我功能cookie处理
-                String cookieValue = CookieUtils.getCookieValue(request, Constants.COOKIE_NAME);
-
-                Remember remember ;
-                if (Constants.REMEMBER_FLAG.equals(rememberStr)) {
-                    String invariable_series = PasswordUtils.getMD5(RandomUtils.generateMixString(32));
-                    String usertoken = PasswordUtils.getMD5(RandomUtils.generateMixString(64));
-                    String key = URLEncoder.encode(invariable_series+Constants.SEPRETOR_FLAG+user.getUserName()+Constants
-                            .SEPRETOR_FLAG+token, "utf-8");
-
-                    remember = rememberMapper.selectOne(new Remember(null,null,byUsernameOrEmail.getId()));
-                    if (CommonUtils.isEmpty(remember)){
-                        remember = new Remember(invariable_series,usertoken,user.getId());
-                        rememberMapper.insert(remember);
-                    }else{
-                        remember.setInvariableSeries(invariable_series);
-                        remember.setToken(usertoken);
-                        remember.setUserId(user.getId());
-                        rememberMapper.updateByPrimaryKey(remember);
-                    }
-                    CookieUtils.addCookie(response,Constants.COOKIE_NAME,key,Constants
-                            .COOKIE_USERNAME_TIMEOUT);
-                }else if (!Constants.REMEMBER_FLAG.equals(rememberStr) && !CommonUtils.isEmpty(cookieValue)){
-                    String[] split = cookieValue.split(Constants.SEPRETOR_FLAG);
-                    String cookieUuid = split[0];
-                   /* RememberExample rememberExample = new RememberExample();
-                    RememberExample.Criteria rememberCri = rememberExample.createCriteria();
-                    rememberCri.andInvariableSeriesEqualTo(cookieUuid);
-                    rememberMapper.deleteByExample(rememberExample);*/
-                    rememberMapper.delete(new Remember(cookieUuid,null,null));
-                    CookieUtils.removeCookie(response, Constants.COOKIE_NAME);
-                }
+                userService.rememberMe(request, response, rememberStr, byUsernameOrEmail);
 
             }else{
                 token.clear();
@@ -131,9 +102,6 @@ public class UserController extends BaseController {
         if (ExceptionMsg.EmailUsed.getCode().equals(str)) {
             return result(ExceptionMsg.EmailUsed);
         }
-
-//        String salt = PasswordUtils.generateRandomSalt();
-//        user.setPassword(PasswordUtils.getMD5(user.getPassword() + salt));
         String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
         String codePassword = PasswordUtils.codePassword(user.getUserName(), user.getPassword(), salt);
         user.setPassword(codePassword);

@@ -32,7 +32,7 @@ public class WebMvcConfigure extends WebMvcConfigurerAdapter {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("pages/admin3/login_soft");
+        registry.addViewController("/").setViewName("pages/admin3/index");
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
         super.addViewControllers(registry);
         String os = System.getProperty("os.name");
