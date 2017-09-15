@@ -1,5 +1,6 @@
 package kindle.utils;
 
+import javax.print.attribute.Size2DSyntax;
 import java.util.Random;
 
 /**
@@ -92,5 +93,5 @@ public class RandomUtils {
         } 
         return sb.toString(); 
     }
-    
+
 }
