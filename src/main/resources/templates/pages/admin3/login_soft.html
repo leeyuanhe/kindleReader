@@ -264,9 +264,11 @@ License: You must have a valid license purchased only from themeforest(the above
                     data: form.serialize(),
                     success: function (obj) {
 
-                        if (obj.indexOf("DOCTYPE")){
-                            window.open("/index", "_self");
-                            return;
+                        if(obj.rspCode == undefined ){
+                            if (obj.indexOf("DOCTYPE")){
+                                window.open("/index", "_self");
+                                return;
+                            }
 						}
 
                         if (obj.rspCode == '00') {

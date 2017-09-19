@@ -23,7 +23,7 @@ public class BookController extends BaseController{
     public ModelAndView shareBook(HttpServletRequest request){
 
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("pages/admin3/table_basic");
+        mv.setViewName("pages/admin3/table_managed");
         return mv;
     }
 }

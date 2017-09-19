@@ -15,7 +15,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!--[if IE 9]>
 <html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
-<html lang="en" class="no-js" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" class="no-js">
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
 <head>
@@ -26,7 +26,7 @@ License: You must have a valid license purchased only from themeforest(the above
     <meta content="" name="description"/>
     <meta content="" name="author"/>
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700 &nbsp; subset=all" rel="stylesheet"
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700 &amp;nbsp;subset=all" rel="stylesheet"
           type="text/css"/>
     <link href="../../assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <link href="../../assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet"
@@ -1295,7 +1295,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
     <div class="container">
-        2014 &copy; Metronic by keenthemes.
+        2014 &amp;copy; Metronic by keenthemes.
         <a href="http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes"
            title="Purchase Metronic just for 27$ and get lifetime updates for free" target="_blank">Purchase
             Metronic!</a>
@@ -1361,7 +1361,10 @@ License: You must have a valid license purchased only from themeforest(the above
             url: "/book/sharebook",
             success: function(result){
                 //请求正确之后的操作
-                alert("eee")
+                if (result.indexOf("DOCTYPE")){
+                    $(document.body).html(result);
+                    return;
+                }
             },
             error: function(result){
                 //请求失败之后的操作

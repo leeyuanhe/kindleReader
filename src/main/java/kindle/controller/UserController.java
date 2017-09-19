@@ -81,7 +81,6 @@ public class UserController extends BaseController {
                 request.getSession().setAttribute(Constants.SESSSION_USER_KEY, user);
                 //记住我功能cookie处理
                 userService.rememberMe(request, response, rememberStr, byUsernameOrEmail);
-
             }else{
                 token.clear();
             }
