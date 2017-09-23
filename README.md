@@ -1,4 +1,4 @@
-# KindleReader ![Test Passed](https://img.shields.io/travis/USER/REPO.svg)
+# KindleReader ![Test Passed](https://img.shields.io/travis/USER/REPO.svg)![](https://img.shields.io/github/license/mashape/apistatus.svg)
 KindleReader是一个图书分享的网站,还在coding阶段。
 
 
